@@ -1,0 +1,23 @@
+---
+- name: Installer Zabbix et Grafana avec Docker Compose
+  hosts: my_docker_hosts
+  become: yes
+  tasks:
+    - name: Créer un répertoire pour le docker-compose
+      file:
+        path: /home/sysadmin/monitoring
+        state: directory
+        owner: sysadmin
+        group: sysadmin
+        mode: '0755'
+
+    - name: Cloner le dépôt Zabbix et Grafana Docker
+      git:
+        repo: https://github.com/akmalovaa/zabbix-docker.git
+        dest: /home/sysadmin/monitoring
+        update: yes
+
+    - name: Démarrer les services avec Docker Compose
+      command:
+        cmd: docker compose up -d
+        chdir: /home/sysadmin/monitoring

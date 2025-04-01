@@ -1,0 +1,51 @@
+---
+- name: Installer Minikube et kubectl
+  hosts: VM3
+  become: true
+  tasks:
+
+    - name: Installer les dépendances
+      apt:
+        name:
+          - curl
+          - wget
+          - apt-transport-https
+        state: present
+        update_cache: yes
+
+    - name: Télécharger Minikube
+      get_url:
+        url: "https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64"
+        dest: "/tmp/minikube-linux-amd64"
+        mode: '0755'
+
+    - name: Installer Minikube
+      command: mv /tmp/minikube-linux-amd64 /usr/local/bin/minikube
+
+    - name: Télécharger kubectl
+      shell: |
+        curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+        chmod +x kubectl
+        mv kubectl /usr/local/bin/
+      args:
+        chdir: /tmp
+
+    - name: Vérifier l'installation de Minikube
+      command: minikube version
+      register: minikube_version
+      changed_when: false
+
+    - name: Afficher la version de Minikube
+      debug:
+        msg: "{{ minikube_version.stdout }}"
+
+    - name: Assurer que sysadmin appartient au groupe docker
+      user:
+        name: sysadmin
+        groups: docker
+        append: yes
+
+    - name: Démarrer Minikube avec Docker en tant que sysadmin
+      become: false
+      become_user: sysadmin
+      command: minikube start --driver=docker

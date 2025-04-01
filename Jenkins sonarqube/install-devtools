@@ -1,0 +1,19 @@
+---
+- name: Installer Jenkins et SonarQube
+  hosts: VM4
+  become: true
+  tasks:
+    - name: Créer un répertoire pour le docker-compose
+      file:
+        path: /home/sysadmin/devtools
+        state: directory
+
+    - name: Copier le fichier docker-compose.yml
+      copy:
+        src: ~/ansible/devtools/docker-compose.yml
+        dest: /home/sysadmin/devtools/docker-compose.yml
+
+    - name: Démarrer les services Docker Compose
+      command: docker compose up -d
+      args:
+        chdir: /home/sysadmin/devtools/

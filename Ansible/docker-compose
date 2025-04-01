@@ -1,0 +1,17 @@
+ervices:
+  ansible:
+    image: cytopia/ansible:latest  # Use this instead of williamyeh/ansible
+    container_name: ansible
+    volumes:
+      - ./ansible:/ansible
+      - ~/.ssh:/root/.ssh:ro
+    working_dir: /ansible
+    entrypoint: ["tail", "-f", "/dev/null"]
+
+  terraform:
+    image: hashicorp/terraform:latest  # Use official Terraform image
+    container_name: terraform
+    volumes:
+      - ./terraform:/terraform
+    working_dir: /terraform
+    entrypoint: ["tail", "-f", "/dev/null"]
