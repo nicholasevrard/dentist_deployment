@@ -1,6 +1,5 @@
 ---
 - name: Installer Zabbix et Grafana avec Docker Compose
-  hosts: my_docker_hosts
   become: yes
   tasks:
     - name: Créer un répertoire pour le docker-compose
