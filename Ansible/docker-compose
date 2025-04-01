@@ -1,4 +1,4 @@
-ervices:
+services:
   ansible:
     image: cytopia/ansible:latest  # Use this instead of williamyeh/ansible
     container_name: ansible
