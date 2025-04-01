@@ -44,30 +44,30 @@ $configurationPower = @{
 
 $inventory = @(@{
         "vmName" = "VM-Master";
-        "os"   = $osPath; 
-        "ram"  = $configurationPower["ram"]; 
-        "cpu"  = $configurationPower["core"];
-        "size" = "80GB"
+        "os"     = $osPath; 
+        "ram"    = $configurationPower["ram"]; 
+        "cpu"    = $configurationPower["core"];
+        "size"   = "80GB"
     }, 
-    @{"vmName"   = "VM-CICDCD"; 
+    @{"vmName" = "VM-CICDCD"; 
         "os"   = $osPath; 
         "ram"  = $configurationLight["ram"]; 
         "cpu"  = $configurationLight["core"];
         "size" = "80GB"
     }, 
-    @{"vmName"   = "VM-Test"; 
+    @{"vmName" = "VM-Test"; 
         "os"   = $osPath; 
         "ram"  = "4GB"; 
         "cpu"  = "2";
         "size" = "80GB"
     }, 
-    @{"vmName"   = "VM-Prod"; 
+    @{"vmName" = "VM-Prod"; 
         "os"   = $osPath; 
         "ram"  = "4GB"; 
         "cpu"  = "2";
         "size" = "80GB"
     }, 
-    @{"vmName"   = "VM-Monitoring"; 
+    @{"vmName" = "VM-Monitoring"; 
         "os"   = $osPath; 
         "ram"  = "4GB"; 
         "cpu"  = "2";
@@ -82,8 +82,10 @@ foreach ($vmSpec in $inventory) {
     $vmName = $vmSpec["vmName"]
     
     #creation VM
-    New-VM -Name $vmName -Path $vmDirectory -Generation 2 -NoVHD
-    
+    #New-VM -Name $vmName -Path $vmDirectory -Generation 2 -NoVHD
+    #clone-vm 
+
+
     #definition spec vm
     Set-VMMemory -VMName $vmName -StartupBytes $vmSpec["ram"]
     Set-VMProcessor -VMName $vmName -Count $vmSpec["cpu"]
@@ -96,6 +98,34 @@ foreach ($vmSpec in $inventory) {
     $vhdPath = "$virtualDiskDirectory\$vmName\$($vmName).vhdx"
     New-VHD -Path $vhdPath -SizeBytes 40GB -Dynamic 
     Add-VMHardDiskDrive -VMName $vmName -Path $vhdPath
+    
+    #demarrage de la VM
     Start-VM -VMName $vmName 
+
+    # on ouvre une cession distante sur la VM
+    $securePassword = ConvertTo-SecureString "MotDePasse" -AsPlainText -Force
+    $cred = New-Object System.Management.Automation.PSCredential ("NomUtilisateur", $securePassword)
+    $session = New-PSSession -VMName $vmName -Credential $cred
+
+    # execution commande dans la VM
+    Invoke-Command -Session $session -ScriptBlock {
+        # Modifier l'IP de l'interface Ethernet
+        New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress "192.168.1.100" -PrefixLength 24 -DefaultGateway "192.168.1.1"
+    
+        # Modifier les DNS
+        Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses ("8.8.8.8", "8.8.4.4")
+    }
+
+    Remove-PSSession $session
+
+
 }
 
+
+$foundOS = Get-Os
+
+if ($foundOS -eq "windows") {
+    #code pour changer l'ip windows
+} elif ($foundOS -eq "linux") {
+    #code pour changer l'ip sur linux
+}
