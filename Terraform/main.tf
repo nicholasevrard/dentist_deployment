@@ -56,7 +56,7 @@ resource "aws_route_table_association" "my_subnet_association" {
 resource "aws_security_group" "network-security-group" {
   name        = "my-security-group"
   description = "Allow inbound & outbound traffic"
-  vpc_id      = aws_vpc.my_vpc.id  # Correction ici
+  vpc_id      = aws_vpc.my_vpc.id # Correction ici
 
   ingress {
     description = "SSH"
@@ -100,7 +100,7 @@ resource "aws_instance" "VM-cicdcd" {
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.deployer.key_name
   vpc_security_group_ids = [aws_security_group.network-security-group.id]
-  subnet_id              = aws_subnet.my_subnet.id  # Correction ici
+  subnet_id              = aws_subnet.my_subnet.id # Correction ici
 
   tags = {
     Name = "VM-cicdcd"
@@ -113,7 +113,7 @@ resource "aws_instance" "VM-test" {
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.deployer.key_name
   vpc_security_group_ids = [aws_security_group.network-security-group.id]
-  subnet_id              = aws_subnet.my_subnet.id  # Correction ici
+  subnet_id              = aws_subnet.my_subnet.id # Correction ici
 
   tags = {
     Name = "VM-test"
@@ -126,7 +126,7 @@ resource "aws_instance" "VM-prod" {
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.deployer.key_name
   vpc_security_group_ids = [aws_security_group.network-security-group.id]
-  subnet_id              = aws_subnet.my_subnet.id  # Correction ici
+  subnet_id              = aws_subnet.my_subnet.id # Correction ici
 
   tags = {
     Name = "VM-prod"
@@ -139,7 +139,7 @@ resource "aws_instance" "VM-monitoring" {
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.deployer.key_name
   vpc_security_group_ids = [aws_security_group.network-security-group.id]
-  subnet_id              = aws_subnet.my_subnet.id  # Correction ici
+  subnet_id              = aws_subnet.my_subnet.id # Correction ici
 
   tags = {
     Name = "VM-monitoring"
@@ -166,7 +166,7 @@ output "all_public_dns" {
 
 # Enregistrement des adresses dans un fichier local
 resource "local_file" "all_public_dns" {
-  content = <<-EOF
+  content  = <<-EOF
     cicdcd_public_dns = "${aws_instance.VM-cicdcd.public_dns}"
     test_public_dns = "${aws_instance.VM-test.public_dns}"
     production_public_dns = "${aws_instance.VM-prod.public_dns}"

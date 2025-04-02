@@ -1,0 +1,14 @@
+# Ignore Terraform state files
+*.tfstate
+*.tfstate.backup
+
+# Ignore Terraform provider binaries and temporary files
+.terraform/
+
+# Ignore local output files
+
+my-key
+my-key.pub
+.terraform*
+terraform*
+public_dns.txt
