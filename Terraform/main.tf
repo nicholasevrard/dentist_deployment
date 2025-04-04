@@ -95,7 +95,7 @@ resource "aws_security_group" "network-security-group" {
 }
 
 # Fonction pour créer une instance EC2 pour CICD
-resource "aws_instance" "VM-cicdcd" {
+resource "aws_instance" "VMcicdcd" {
   ami                    = "ami-084568db4383264d4"
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.deployer.key_name
@@ -103,12 +103,12 @@ resource "aws_instance" "VM-cicdcd" {
   subnet_id              = aws_subnet.my_subnet.id # Correction ici
 
   tags = {
-    Name = "VM-cicdcd"
+    Name = "VMcicdcd"
   }
 }
 
 # Fonction pour créer une instance EC2 pour Test
-resource "aws_instance" "VM-test" {
+resource "aws_instance" "VMtest" {
   ami                    = "ami-084568db4383264d4"
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.deployer.key_name
@@ -116,12 +116,12 @@ resource "aws_instance" "VM-test" {
   subnet_id              = aws_subnet.my_subnet.id # Correction ici
 
   tags = {
-    Name = "VM-test"
+    Name = "VMtest"
   }
 }
 
 # Fonction pour créer une instance EC2 pour Production
-resource "aws_instance" "VM-prod" {
+resource "aws_instance" "VMprod" {
   ami                    = "ami-084568db4383264d4"
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.deployer.key_name
@@ -129,12 +129,12 @@ resource "aws_instance" "VM-prod" {
   subnet_id              = aws_subnet.my_subnet.id # Correction ici
 
   tags = {
-    Name = "VM-prod"
+    Name = "VMprod"
   }
 }
 
 # Fonction pour créer une instance EC2 pour Monitoring
-resource "aws_instance" "VM-monitoring" {
+resource "aws_instance" "VMmonitoring" {
   ami                    = "ami-084568db4383264d4"
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.deployer.key_name
@@ -142,7 +142,7 @@ resource "aws_instance" "VM-monitoring" {
   subnet_id              = aws_subnet.my_subnet.id # Correction ici
 
   tags = {
-    Name = "VM-monitoring"
+    Name = "VMmonitoring"
   }
 }
 
@@ -157,20 +157,20 @@ output "subnet_id" {
 
 output "all_public_dns" {
   value = {
-    cicdcd_public_dns     = aws_instance.VM-cicdcd.public_dns
-    test_public_dns       = aws_instance.VM-test.public_dns
-    production_public_dns = aws_instance.VM-prod.public_dns
-    monitoring_public_dns = aws_instance.VM-monitoring.public_dns
+    cicdcd_public_dns     = aws_instance.VMcicdcd.public_dns
+    test_public_dns       = aws_instance.VMtest.public_dns
+    production_public_dns = aws_instance.VMprod.public_dns
+    monitoring_public_dns = aws_instance.VMmonitoring.public_dns
   }
 }
 
 # Enregistrement des adresses dans un fichier local
 resource "local_file" "all_public_dns" {
   content  = <<-EOF
-    cicdcd_public_dns = "${aws_instance.VM-cicdcd.public_dns}"
-    test_public_dns = "${aws_instance.VM-test.public_dns}"
-    production_public_dns = "${aws_instance.VM-prod.public_dns}"
-    monitoring_public_dns = "${aws_instance.VM-monitoring.public_dns}"
+    cicdcd_public_dns = "${aws_instance.VMcicdcd.public_dns}"
+    test_public_dns = "${aws_instance.VMtest.public_dns}"
+    production_public_dns = "${aws_instance.VMprod.public_dns}"
+    monitoring_public_dns = "${aws_instance.VMmonitoring.public_dns}"
   EOF
   filename = "all_public_dns.txt"
 }

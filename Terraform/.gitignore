@@ -12,3 +12,5 @@ my-key.pub
 .terraform*
 terraform*
 public_dns.txt
+*.tf
+*.tfvars
