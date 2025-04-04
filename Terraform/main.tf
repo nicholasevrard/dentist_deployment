@@ -1,7 +1,7 @@
 # Creating key-pair on AWS using SSH-public key
 resource "aws_key_pair" "deployer" {
   key_name   = "my-key"
-  public_key = file("${path.module}/my-key.pub")
+  public_key = file("C:/Users/g2r/Desktop/dentist_deployment/Terraform/my-key.pub")
 }
 
 # Creating a security group to restrict/allow inbound connectivity

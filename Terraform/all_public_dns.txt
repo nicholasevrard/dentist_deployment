@@ -1,4 +1,4 @@
-cicdcd_public_dns = ""
-test_public_dns = ""
-production_public_dns = ""
-monitoring_public_dns = ""
+cicdcd_public_dns = "ec2-44-201-78-143.compute-1.amazonaws.com"
+test_public_dns = "ec2-52-201-234-157.compute-1.amazonaws.com"
+production_public_dns = "ec2-44-210-115-23.compute-1.amazonaws.com"
+monitoring_public_dns = "ec2-54-234-238-73.compute-1.amazonaws.com"
