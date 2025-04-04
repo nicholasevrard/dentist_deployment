@@ -1,0 +1,62 @@
+- name: Configuration de l'instance AWS EC2 VMcicdcd (CI/CD/CD)
+  hosts: aws_cicdcd_instance
+  become: true
+  tasks:
+    - name: Télécharger le script d'installation de Docker
+      command: curl -fsSL https://get.docker.com -o get-docker.sh
+
+    - name: Installer Docker
+      command: sh get-docker.sh
+
+    - name: Créer le conteneur Jenkins
+      command: >
+        docker run --name jenkins_master -d
+        -p 8080:8080 -p 50000:50000
+        --restart=on-failure
+        jenkins/jenkins:lts-jdk17
+
+    - name: Copier les agents Jenkins
+      ansible.builtin.copy:
+        src: ../Jenkins_agents/
+        dest: /home/ubuntu/
+        mode: '0755'
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Copier la clé privée SSH pour se connecter aux autres instances
+      ansible.builtin.copy:
+        src: ../Terraform/my-key
+        dest: /home/ubuntu/my-key
+        mode: '0600'
+        owner: ubuntu
+        group: ubuntu
+
+- name: Configuration de l'instance AWS EC2 VMtest (Test)
+  hosts: aws_test_instance
+  become: true
+  tasks:
+    - name: Télécharger le script d'installation de Docker
+      command: curl -fsSL https://get.docker.com -o get-docker.sh
+
+    - name: Installer Docker
+      command: sh get-docker.sh
+
+- name: Configuration de l'instance AWS EC2 VMprod (Production)
+  hosts: aws_production_instance
+  become: true
+  tasks:
+    - name: Télécharger le script d'installation de Docker
+      command: curl -fsSL https://get.docker.com -o get-docker.sh
+
+    - name: Installer Docker
+      command: sh get-docker.sh
+
+- name: Configuration de l'instance AWS EC2 VMmonitoring (Monitoring)
+  hosts: aws_monitoring_instance
+  become: true
+  tasks:
+    - name: Télécharger le script d'installation de Docker
+      command: curl -fsSL https://get.docker.com -o get-docker.sh
+
+    - name: Installer Docker
+      command: sh get-docker.sh
