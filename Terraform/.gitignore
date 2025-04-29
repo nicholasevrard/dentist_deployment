@@ -14,3 +14,4 @@ terraform*
 public_dns.txt
 *.tf
 *.tfvars
+.terraform.lock.hcl
